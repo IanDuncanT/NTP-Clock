@@ -10,8 +10,8 @@
 
 //SOFTWARE VARIABLES
 int timeBeforeUpdate = 30; //SECONDS BETWEEN NTP UPDATES
-char ssid[] = "ATT2hGR5Hp";
-char pass[] = "6ka+8n#nnm7b";
+char ssid[] = "SSID";
+char pass[] = "PASSWORD";
 char hostname[] = "NTP-CLOCK";
 int HH = -5; //UTC HOURS DIFFERENCE
 int MM = 0; //UTC MINUTES DIFFERENCE

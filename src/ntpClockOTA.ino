@@ -47,7 +47,7 @@ LiquidCrystal lcd(14, 2, 0, 4, 5, 16);
 //                           PROGRAM
 //==============================================================
 
-void morningAlarm(){
+void morningAlarm() {
   tone(12, 440);
   Serial.println("Alarm Started");
   Alarm.delay(200);
@@ -69,11 +69,11 @@ time_t sendNTPpacket(IPAddress& address) {
   udp.endPacket();
   Alarm.delay(1000);
   int cb = udp.parsePacket();
-  if (!cb){
+  if (!cb) {
     return 0;
     Alarm.delay(1000);
   }
-  else{
+  else {
     udp.read(packetBuffer, NTP_PACKET_SIZE);
     unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
     unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
@@ -82,14 +82,14 @@ time_t sendNTPpacket(IPAddress& address) {
   }
 }
 
-void displayUpdate(int hh, int mm, int ss, int yy, int dayOfWeek, int da, int mo){
+void displayUpdate(int hh, int mm, int ss, int yy, int dayOfWeek, int da, int mo) {
   lcd.clear();
   //YEAR
   lcd.setCursor(12, 0);
   lcd.print(yy);
   //DAY OF WEEK
   lcd.setCursor(0, 0);
-  switch(dayOfWeek){
+  switch (dayOfWeek) {
       case 0:
       lcd.print("Sun");
       break;
@@ -188,23 +188,23 @@ void displayUpdate(int hh, int mm, int ss, int yy, int dayOfWeek, int da, int mo
   }
 }
 
-void timeCarry(){
-  if(ss > 59){
+void timeCarry() {
+  if (ss > 59) {
     mm += 1;
     ss -= 60;
   }
-  if(mm > 59){
+  if (mm > 59) {
     hh += 1;
     mm -= 60;
   }
-  if(hh > 23){
+  if (hh > 23) {
     dayOfWeek += 1;
     hh-=24;
   }
 }
 
 void timeUpdate() {
-  for(int i= -1; i<timeBeforeUpdate; i++){
+  for (int i= -1; i<timeBeforeUpdate; i++) {
     ss ++;
     timeCarry();
     displayUpdate(hh, mm, ss, yy, dayOfWeek, da, mo);
@@ -212,7 +212,7 @@ void timeUpdate() {
   }
 }
 
-void secondsToVariables(time_t secs){
+void secondsToVariables(time_t secs) {
   time_t epochLocal = secs + (HH * 3600)+(MM * 60);
   ss = second(epochLocal);
   mm = minute(epochLocal);
@@ -223,7 +223,7 @@ void secondsToVariables(time_t secs){
   dayOfWeek = (((epochLocal / 86400) + 4) % 7);
 }
 
-void setup(){
+void setup() {
   //INIT
   Alarm.alarmRepeat(9,45,0, morningAlarm);
   Serial.begin(115200);
@@ -234,7 +234,7 @@ void setup(){
   WiFi.mode(WIFI_STA);
   WiFi.hostname(hostname);
   WiFi.begin(ssid, pass);
-  while(WiFi.status() != WL_CONNECTED){
+  while (WiFi.status() != WL_CONNECTED) {
     Alarm.delay(500);
   }
   Alarm.delay(2500);
@@ -267,7 +267,7 @@ void setup(){
   Alarm.delay(2500);
 }
 
-void loop(){
+void loop() {
   ArduinoOTA.handle();
   WiFi.hostByName(ntpServerName, timeServerIP);
   time_t secs = sendNTPpacket(timeServerIP);

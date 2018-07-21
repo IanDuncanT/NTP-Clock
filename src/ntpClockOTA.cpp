@@ -5,7 +5,6 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <TimeLib.h>
-#include <TimeAlarms.h>
 #include <LiquidCrystal.h>
 
 //SOFTWARE VARIABLES
@@ -17,9 +16,6 @@ int HH = -5; //UTC HOURS DIFFERENCE
 int MM = 0; //UTC MINUTES DIFFERENCE
 unsigned int localPort = 2390;
 IPAddress timeServerIP;
-
-//ALARMS
-const int alarmPin = 12;
 
 //TIME SERVERS
 const char* ntpServerName = "time.nist.gov";
@@ -45,14 +41,7 @@ LiquidCrystal lcd(14, 2, 0, 4, 5, 16);
 
 //==============================================================
 //                           PROGRAM
-//==============================================================
-
-void morningAlarm() {
-  tone(12, 440);
-  Serial.println("Alarm Started");
-  Alarm.delay(200);
-  noTone(12);
-}
+//==============================================================x
 
 time_t sendNTPpacket(IPAddress& address) {
   memset(packetBuffer, 0, NTP_PACKET_SIZE);
@@ -67,11 +56,11 @@ time_t sendNTPpacket(IPAddress& address) {
   udp.beginPacket(address, 123);
   udp.write(packetBuffer, NTP_PACKET_SIZE);
   udp.endPacket();
-  Alarm.delay(1000);
+  delay(1000);
   int cb = udp.parsePacket();
   if (!cb) {
     return 0;
-    Alarm.delay(1000);
+    delay(1000);
   }
   else {
     udp.read(packetBuffer, NTP_PACKET_SIZE);
@@ -208,7 +197,7 @@ void timeUpdate() {
     ss ++;
     timeCarry();
     displayUpdate(hh, mm, ss, yy, dayOfWeek, da, mo);
-    Alarm.delay(1000 - (1000 / timeBeforeUpdate));
+    delay(1000 - (1000 / timeBeforeUpdate));
   }
 }
 
@@ -225,7 +214,6 @@ void secondsToVariables(time_t secs) {
 
 void setup() {
   //INIT
-  Alarm.alarmRepeat(9,45,0, morningAlarm);
   Serial.begin(115200);
   Serial.println("Serial Started");
   lcd.begin(16, 2);
@@ -235,9 +223,9 @@ void setup() {
   WiFi.hostname(hostname);
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
-    Alarm.delay(500);
+    delay(500);
   }
-  Alarm.delay(2500);
+  delay(2500);
   ArduinoOTA.onStart([](){
     Serial.println("Start");
 
@@ -255,7 +243,7 @@ void setup() {
     else if (error == OTA_CONNECT_ERROR) lcd.println("Connect Failed");
     else if (error == OTA_RECEIVE_ERROR) lcd.println("Receive Failed");
     else if (error == OTA_END_ERROR) lcd.println("End Failed");
-    Alarm.delay(2500);
+    delay(2500);
   });
   ArduinoOTA.begin();
   udp.begin(localPort);
@@ -264,7 +252,7 @@ void setup() {
   lcd.print("WiFi");
   lcd.setCursor(2, 1);
   lcd.print("Connected");
-  Alarm.delay(2500);
+  delay(2500);
 }
 
 void loop() {

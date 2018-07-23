@@ -188,7 +188,11 @@ void timeCarry() {
   }
   if (hh > 23) {
     dayOfWeek += 1;
-    hh-=24;
+    da += 1;
+    hh -= 24;
+  }
+  if (dayOfWeek > 6) {
+    dayOfWeek -= 7;
   }
 }
 

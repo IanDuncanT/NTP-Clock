@@ -1,1 +1,1 @@
-# Over the Air Network Time Protocol Clock
+# Network Time Protocol Clock

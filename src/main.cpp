@@ -59,8 +59,8 @@ time_t sendNTPpacket(IPAddress& address) {
   delay(1000);
   int cb = udp.parsePacket();
   if (!cb) {
-    return 0;
     delay(1000);
+    return 0;
   }
   else {
     udp.read(packetBuffer, NTP_PACKET_SIZE);
